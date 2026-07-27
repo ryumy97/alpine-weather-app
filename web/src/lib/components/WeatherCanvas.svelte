@@ -5,8 +5,23 @@
 	import { weatherStore } from '$lib/stores/weather';
 	import { onDestroy, onMount } from 'svelte';
 
+	type Props = {
+		treeX?: number;
+		thickness?: number;
+		trunkColor?: string;
+		branchColor?: string;
+	};
+
+	let {
+		treeX = undefined,
+		thickness = undefined,
+		trunkColor = undefined,
+		branchColor = undefined
+	}: Props = $props();
+
 	let canvasEl: HTMLCanvasElement;
 	let scene: Scene;
+	let tree = $state<Tree | undefined>(undefined);
 	let animationId: number;
 
 	$effect(() => {
@@ -16,10 +31,24 @@
 		void error;
 	});
 
+	$effect(() => {
+		if (!tree) return;
+		if (treeX !== undefined) tree.setX(treeX);
+		if (thickness !== undefined) tree.setThickness(thickness);
+		if (trunkColor !== undefined) tree.setTrunkColor(trunkColor);
+		if (branchColor !== undefined) tree.setBranchColor(branchColor);
+	});
+
 	onMount(() => {
 		scene = new Scene(canvasEl);
 
-		scene.add(new Tree(new Position(window.innerWidth / 2, window.innerHeight)));
+		const x = treeX ?? window.innerWidth / 2;
+		tree = new Tree(new Position(x, window.innerHeight), {
+			thickness,
+			trunkColor,
+			branchColor
+		});
+		scene.add(tree);
 
 		const animate = () => {
 			const now = Date.now();

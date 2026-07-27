@@ -3,6 +3,12 @@ import Line, { StokeHorizontalLine } from './line';
 import Object2D from './object';
 import Position from './position';
 
+export type TreeOptions = {
+	thickness?: number;
+	trunkColor?: string;
+	branchColor?: string;
+};
+
 export default class Tree extends Object2D {
 	public trunk: Line;
 	public leftBranch: Line;
@@ -12,36 +18,81 @@ export default class Tree extends Object2D {
 	public rightBranch2: Line;
 	public rightBranch3: Line;
 	private readonly createdAt: number;
+	private readonly branches: Line[];
 
 	public duration: number = 300;
 	public stagger: number = 100;
 
-	constructor(position: Position) {
+	constructor(position: Position, options: TreeOptions = {}) {
 		super();
+		const thickness = options.thickness ?? window.innerWidth * 0.015;
+		const trunkColor = options.trunkColor ?? 'black';
+		const branchColor = options.branchColor ?? 'black';
+		const branchThickness = thickness * 1.25;
+
 		this.trunk = new Line(position.copy(), position.copy(), {
-			thickness: window.innerWidth * 0.015
+			thickness,
+			color: trunkColor
 		});
 		this.leftBranch = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 		this.leftBranch2 = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 		this.leftBranch3 = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 
 		this.rightBranch = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 		this.rightBranch2 = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 		this.rightBranch3 = new StokeHorizontalLine(position.copy(), position.copy(), {
-			thickness: this.trunk.thickness * 1.25
+			thickness: branchThickness,
+			color: branchColor
 		});
 
+		this.branches = [
+			this.leftBranch,
+			this.leftBranch2,
+			this.leftBranch3,
+			this.rightBranch,
+			this.rightBranch2,
+			this.rightBranch3
+		];
+
 		this.createdAt = Date.now();
+	}
+
+	public setX(x: number): void {
+		this.trunk.start.x = x;
+		this.trunk.end.x = x;
+	}
+
+	public setThickness(thickness: number): void {
+		this.trunk.thickness = thickness;
+		const branchThickness = thickness * 1.25;
+		for (const branch of this.branches) {
+			branch.thickness = branchThickness;
+		}
+	}
+
+	public setTrunkColor(color: string): void {
+		this.trunk.color = color;
+	}
+
+	public setBranchColor(color: string): void {
+		for (const branch of this.branches) {
+			branch.color = color;
+		}
 	}
 
 	public update(now: number): void {
