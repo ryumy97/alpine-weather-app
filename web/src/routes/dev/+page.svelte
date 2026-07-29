@@ -6,8 +6,11 @@
 	let maxX = $state(1000);
 	let treeX = $state(500);
 	let thickness = $state(12);
-	let trunkColor = $state('#3d2b1f');
-	let branchColor = $state('#2f5d3a');
+	let trunkColor = $state('#000000');
+	let branchColor = $state('#000000');
+	let windSpeed = $state(4);
+	let branchAngle = $state(120);
+	let branchStrokeAngle = $state(60);
 
 	onMount(() => {
 		maxX = window.innerWidth;
@@ -20,7 +23,15 @@
 <main class="dev-page">
 	<div class="stage">
 		{#if ready}
-			<WeatherCanvas {treeX} {thickness} {trunkColor} {branchColor} />
+			<WeatherCanvas
+				{treeX}
+				{thickness}
+				{trunkColor}
+				{branchColor}
+				{windSpeed}
+				{branchAngle}
+				{branchStrokeAngle}
+			/>
 		{/if}
 	</div>
 
@@ -35,6 +46,21 @@
 		<label class="field">
 			<span>Thickness <output>{thickness}</output></span>
 			<input type="range" min="1" max="80" step="1" bind:value={thickness} />
+		</label>
+
+		<label class="field">
+			<span>Branch angle <output>{Number(branchAngle)}°</output></span>
+			<input type="range" min="30" max="150" step="1" bind:value={branchAngle} />
+		</label>
+
+		<label class="field">
+			<span>Stroke angle <output>{Number(branchStrokeAngle)}°</output></span>
+			<input type="range" min="20" max="160" step="1" bind:value={branchStrokeAngle} />
+		</label>
+
+		<label class="field">
+			<span>Wind <output>{Number(windSpeed).toFixed(1)} m/s</output></span>
+			<input type="range" min="0" max="30" step="0.5" bind:value={windSpeed} />
 		</label>
 
 		<label class="field">
@@ -60,7 +86,7 @@
 		position: relative;
 		min-height: 100svh;
 		overflow: hidden;
-		background: #e8eef2;
+		background: #fff;
 	}
 
 	.stage {

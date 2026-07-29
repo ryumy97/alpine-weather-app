@@ -10,13 +10,19 @@
 		thickness?: number;
 		trunkColor?: string;
 		branchColor?: string;
+		windSpeed?: number;
+		branchAngle?: number;
+		branchStrokeAngle?: number;
 	};
 
 	let {
 		treeX = undefined,
 		thickness = undefined,
 		trunkColor = undefined,
-		branchColor = undefined
+		branchColor = undefined,
+		windSpeed = undefined,
+		branchAngle = undefined,
+		branchStrokeAngle = undefined
 	}: Props = $props();
 
 	let canvasEl: HTMLCanvasElement;
@@ -37,6 +43,9 @@
 		if (thickness !== undefined) tree.setThickness(thickness);
 		if (trunkColor !== undefined) tree.setTrunkColor(trunkColor);
 		if (branchColor !== undefined) tree.setBranchColor(branchColor);
+		if (windSpeed !== undefined) tree.setWindSpeed(windSpeed);
+		if (branchAngle !== undefined) tree.setBranchAngle(branchAngle);
+		if (branchStrokeAngle !== undefined) tree.setBranchStrokeAngle(branchStrokeAngle);
 	});
 
 	onMount(() => {
@@ -46,7 +55,10 @@
 		tree = new Tree(new Position(x, window.innerHeight), {
 			thickness,
 			trunkColor,
-			branchColor
+			branchColor,
+			windSpeed,
+			branchAngle,
+			branchStrokeAngle
 		});
 		scene.add(tree);
 
